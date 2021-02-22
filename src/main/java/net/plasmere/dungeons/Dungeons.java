@@ -1,19 +1,15 @@
 package net.plasmere.dungeons;
 
-import org.bukkit.configuration.Configuration;
+import net.plasmere.dungeons.config.ConfigHandler;
+import net.plasmere.dungeons.config.ConfigUtils;
+import net.plasmere.dungeons.utils.SQLUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Dungeons extends JavaPlugin {
+    private ConfigHandler configHandler;
 
-    private Configuration conf;
-    private Configuration mess;
-
-    public Configuration getConf() {
-        return conf;
-    }
-
-    public Configuration getMess() {
-        return mess;
+    public ConfigHandler getConfigHandler(){
+        return configHandler;
     }
 
     @Override

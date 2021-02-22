@@ -1,2 +1,6 @@
 # DO NOT EDIT THE VERSION:
 version: 0.0.0.1
+
+# When someone joins or leaves.
+join: "&d%player% &bjoined &ethe game."
+leave: "&d%player% &cleft &ethe game."

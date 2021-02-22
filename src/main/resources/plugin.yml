@@ -1,7 +1,7 @@
 name: Dungeons
 version: ${project.version}
 main: net.plasmere.dungeons.Dungeons
-api-version: 1.16
+api-version: 1.8
 authors: [ Nitrate, tomstar ]
 description: Dungeon runner plugin.
 website: https://site.plasmere.net
