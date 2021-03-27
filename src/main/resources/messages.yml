@@ -2,5 +2,15 @@
 version: 0.0.0.1
 
 # When someone joins or leaves.
-join: "&d%player% &bjoined &ethe game."
+join: "&d%player% &ajoined &ethe game."
 leave: "&d%player% &cleft &ethe game."
+error: "&cThere was an error..."
+only-players: "&cThis command can be executed only by players!"
+needs-more: "&cNeeds more arguments!"
+needs-less: "&cNeeds less arguments!"
+
+worldedit-api:
+  no-selection: "&cThere is no selection!"
+
+commands:
+  set-spawning: "&eSet spawning for &b%entity% &eto &6%location%!"

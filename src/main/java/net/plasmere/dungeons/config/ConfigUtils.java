@@ -1,7 +1,8 @@
 package net.plasmere.dungeons.config;
 
 import net.plasmere.dungeons.Dungeons;
-import org.bukkit.configuration.Configuration;
+import net.plasmere.dungeons.backend.conf.Configuration;
+
 
 public class ConfigUtils {
     private static Configuration config = Dungeons.getInstance().getConfigHandler().getConf();

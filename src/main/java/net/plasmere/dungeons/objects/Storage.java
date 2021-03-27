@@ -1,8 +1,8 @@
 package net.plasmere.dungeons.objects;
 
 import net.plasmere.dungeons.Dungeons;
-import net.plasmere.dungeons.objects.entities.ClickableEntity;
-import net.plasmere.dungeons.objects.entities.enums.ClickableEntityTypes;
+import net.plasmere.dungeons.objects.custom.entities.instances.ClickableEntity;
+import net.plasmere.dungeons.objects.custom.entities.enums.ClickableEntityTypes;
 
 import java.io.File;
 import java.util.*;

@@ -1,6 +1,5 @@
-package net.plasmere.dungeons.objects.entities;
+package net.plasmere.dungeons.objects.custom.entities.instances;
 
-import net.plasmere.dungeons.objects.entities.enums.ClickableEntityTypes;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -20,13 +19,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class ClickableEntity implements Entity {
+public class SpawnableEntity implements Entity {
     public Entity entity;
-    public ClickableEntityTypes type;
+    public int difficultyScale = 1;
+    public int floor = 1;
 
-    public ClickableEntity(Entity entity, ClickableEntityTypes type){
+    public SpawnableEntity(Entity entity){
         this.entity = entity;
-        this.type = type;
     }
 
     @Override

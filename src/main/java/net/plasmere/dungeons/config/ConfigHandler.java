@@ -1,9 +1,9 @@
 package net.plasmere.dungeons.config;
 
 import net.plasmere.dungeons.Dungeons;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import net.plasmere.dungeons.backend.conf.Configuration;
+import net.plasmere.dungeons.backend.conf.ConfigurationProvider;
+import net.plasmere.dungeons.backend.conf.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,9 +12,6 @@ import java.nio.file.Files;
 import java.util.Objects;
 
 public class ConfigHandler {
-    private FileConfiguration configuration = new YamlConfiguration();
-    private FileConfiguration messaguration = new YamlConfiguration();
-
     private Configuration conf;
     private Configuration oConf;
     private Configuration mess;
@@ -47,9 +44,7 @@ public class ConfigHandler {
 
     public void reloadConfig(){
         try {
-            this.configuration.load(cfile);
-
-            this.conf = this.configuration;
+            this.conf = loadConf();
 
             ConfigUtils.updateConfig(this.conf);
         } catch (Exception e){
@@ -59,9 +54,7 @@ public class ConfigHandler {
 
     public void reloadMessages(){
         try {
-            this.messaguration.load(mfile);
-
-            this.mess = this.messaguration;
+            this.mess = loadMess();
 
             MessageConfUtils.updateMess(this.mess);
         } catch (Exception e){
@@ -79,18 +72,16 @@ public class ConfigHandler {
         }
 
         try {
-            this.configuration.load(cfile);
+            this.conf = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(inst.getDataFolder(), "config.yml"));
 
-            this.conf = this.configuration;
-
-            if (! this.configVer.equals(ConfigUtils.version)){
-                this.conf = this.iterateConfigs("oldconfig.yml");
-
-                this.inst.getLogger().severe("----------------------------------------------------------");
-                this.inst.getLogger().severe("YOU NEED TO UPDATE THE VALUES IN YOUR NEW CONFIG FILE AS");
-                this.inst.getLogger().severe("YOUR OLD ONE WAS OUTDATED. I IMPORTED THE NEW ONE FOR YOU.");
-                this.inst.getLogger().severe("----------------------------------------------------------");
-            }
+//            if (! this.configVer.equals(ConfigUtils.version)){
+//                this.conf = this.iterateConfigs("oldconfig.yml");
+//
+//                this.inst.getLogger().severe("----------------------------------------------------------");
+//                this.inst.getLogger().severe("YOU NEED TO UPDATE THE VALUES IN YOUR NEW CONFIG FILE AS");
+//                this.inst.getLogger().severe("YOUR OLD ONE WAS OUTDATED. I IMPORTED THE NEW ONE FOR YOU.");
+//                this.inst.getLogger().severe("----------------------------------------------------------");
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,18 +100,16 @@ public class ConfigHandler {
         }
 
         try {
-            this.messaguration.load(mfile);
+            this.mess = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(inst.getDataFolder(), "messages.yml"));
 
-            this.mess = this.messaguration;
-
-            if (! this.messagesVer.equals(MessageConfUtils.version)){
-                this.mess = this.iterateMessagesConf("oldmessages.yml");
-
-                this.inst.getLogger().severe("----------------------------------------------------------");
-                this.inst.getLogger().severe("YOU NEED TO UPDATE THE VALUES IN YOUR NEW MESSAGES FILE AS");
-                this.inst.getLogger().severe("YOUR OLD ONE WAS OUTDATED. I IMPORTED THE NEW ONE FOR YOU.");
-                this.inst.getLogger().severe("----------------------------------------------------------");
-            }
+//            if (! this.messagesVer.equals(MessageConfUtils.version)){
+//                this.mess = this.iterateMessagesConf("oldmessages.yml");
+//
+//                this.inst.getLogger().severe("----------------------------------------------------------");
+//                this.inst.getLogger().severe("YOU NEED TO UPDATE THE VALUES IN YOUR NEW MESSAGES FILE AS");
+//                this.inst.getLogger().severe("YOUR OLD ONE WAS OUTDATED. I IMPORTED THE NEW ONE FOR YOU.");
+//                this.inst.getLogger().severe("----------------------------------------------------------");
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -144,12 +133,10 @@ public class ConfigHandler {
             this.oConf = this.conf;
 
             try {
-                this.configuration.load(cfile);
-            } catch (Exception e){
+                this.conf = ConfigurationProvider.getProvider(YamlConfiguration.class).load(cfile);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            this.conf = this.configuration;
         }
 
         return this.conf;
@@ -168,13 +155,12 @@ public class ConfigHandler {
             }
 
             this.oMess = this.mess;
+
             try {
-                this.messaguration.load(this.mfile);
-            } catch (Exception e){
+                this.mess = ConfigurationProvider.getProvider(YamlConfiguration.class).load(mfile);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            this.mess = this.messaguration;
         }
 
         return this.mess;
