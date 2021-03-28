@@ -8,3 +8,11 @@ mysql:
   database: "database"
   username: "username"
   password: "password"
+
+mobs:
+  bone-walker:
+    time: 5
+    chance: 10
+  ven-spider:
+    time: 5
+    chance: 10

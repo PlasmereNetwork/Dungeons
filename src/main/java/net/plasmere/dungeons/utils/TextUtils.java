@@ -34,4 +34,30 @@ public class TextUtils {
         }
         return treemap.get(l) + integerToRoman(number - l);
     }
+
+    public static String resize(String text, int digits) {
+        try {
+            digits = getDigits(digits, text.length());
+            return text.substring(0, digits);
+        } catch (Exception e) {
+            return text;
+        }
+    }
+
+    public static String truncate(String text, int digits) {
+        try {
+            digits = getDigits(text.indexOf(".") + digits + 1, text.length());
+            return text.substring(0, digits);
+        } catch (Exception e) {
+            return text;
+        }
+    }
+
+    public static int getDigits(int start, int otherSize){
+        if (start <= otherSize) {
+            return start;
+        } else {
+            return otherSize;
+        }
+    }
 }

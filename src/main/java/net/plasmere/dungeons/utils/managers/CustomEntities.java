@@ -7,9 +7,12 @@ import net.plasmere.dungeons.utils.ItemUtils;
 import net.plasmere.dungeons.utils.TextUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.TreeMap;
 
 public enum CustomEntities {
     NULL("NULL",
@@ -65,14 +68,16 @@ public enum CustomEntities {
         this.multiplier = multiplier;
     }
 
+    public static HashMap<Entity, Integer> despawnTimer = new HashMap<>();
+
     public static CustomEntities getEntity(String name){
-        if (name.equals(BONE_WALKER.name)) return BONE_WALKER;
-        if (name.equals(VENOMOUS_TARANTULA.name)) return VENOMOUS_TARANTULA;
+        if (name.equals(BONE_WALKER.name) || name.equals(BONE_WALKER.var)) return BONE_WALKER;
+        if (name.equals(VENOMOUS_TARANTULA.name) || name.equals(VENOMOUS_TARANTULA.var)) return VENOMOUS_TARANTULA;
         return NULL;
     }
 
     public static boolean is(String name, CustomEntities entity){
-        return name.equals(entity.name);
+        return name.equals(entity.var);
     }
 
     public static void summon(CustomEntities entity, Location location){
@@ -80,6 +85,25 @@ public enum CustomEntities {
             new BoneWalkerSkeleton(location.getWorld(), location);
         } else if (entity.equals(VENOMOUS_TARANTULA)) {
             new VenomousTerrantulaSpider(location.getWorld(), location);
+        }
+    }
+
+    public static void addEntity(Entity entity){
+        despawnTimer.put(entity, 120);
+    }
+
+    public static void updateAndRemove(){
+        try {
+            for (Entity entity : despawnTimer.keySet()) {
+                despawnTimer.replace(entity, despawnTimer.get(entity), despawnTimer.get(entity) - 1);
+
+                if (despawnTimer.get(entity) <= 0) {
+                    despawnTimer.remove(entity);
+                    entity.remove();
+                }
+            }
+        } catch (Exception e) {
+            // do nothing
         }
     }
 }

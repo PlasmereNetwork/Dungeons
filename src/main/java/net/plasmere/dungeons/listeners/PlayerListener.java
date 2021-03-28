@@ -1,5 +1,9 @@
 package net.plasmere.dungeons.listeners;
 
+import net.plasmere.dungeons.Dungeons;
+import net.plasmere.dungeons.config.ConfigUtils;
+import net.plasmere.dungeons.config.MessageConfUtils;
+import net.plasmere.dungeons.utils.MessagingHandler;
 import net.plasmere.dungeons.utils.managers.CustomEnchants;
 import net.plasmere.dungeons.objects.custom.entities.DamageStand;
 import net.plasmere.dungeons.utils.ItemUtils;
@@ -7,6 +11,8 @@ import net.plasmere.dungeons.utils.TextUtils;
 import net.plasmere.dungeons.utils.custom.enchantments.EnchantUtils;
 import net.plasmere.dungeons.utils.custom.entities.EntityUtils;
 import net.plasmere.dungeons.utils.managers.CustomEntities;
+import net.plasmere.dungeons.utils.managers.stats.Stat;
+import net.plasmere.dungeons.utils.managers.stats.StatisticsHandler;
 import net.plasmere.dungeons.utils.managers.stats.StatsManager;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -25,7 +31,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -41,8 +47,37 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent event){
         Player player = event.getPlayer();
 
-        for (ItemStack stack : player.getInventory()){
+        for (ItemStack stack : player.getInventory().getContents()){
             EnchantUtils.updateCustomEnchants(stack);
+
+            ItemMeta meta = stack.getItemMeta();
+            meta.spigot().setUnbreakable(true);
+            stack.setItemMeta(meta);
+        }
+
+        event.setJoinMessage(TextUtils.codedString(MessageConfUtils.join.replace("%player%", event.getPlayer().getDisplayName())));
+
+        StatsManager.getOrCreate(player);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onLeave(PlayerQuitEvent event){
+        event.setQuitMessage(TextUtils.codedString(MessageConfUtils.leave.replace("%player%", event.getPlayer().getDisplayName())));
+
+        for (ItemStack stack : event.getPlayer().getInventory().getContents()) {
+            EnchantUtils.updateCustomEnchants(stack);
+
+            ItemMeta meta = stack.getItemMeta();
+            meta.spigot().setUnbreakable(true);
+            stack.setItemMeta(meta);
+        }
+
+        try {
+            Stat stat = StatsManager.getOrCreate(event.getPlayer());
+            stat.saveInfo();
+            StatsManager.removeStat(event.getPlayer().getName());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -95,7 +130,7 @@ public class PlayerListener implements Listener {
 
         CustomEntities ce = CustomEntities.getEntity(event.getEntity().getCustomName());
         if (! ce.equals(CustomEntities.NULL)) {
-            StatsManager.onKill(player, ce);
+            StatisticsHandler.onKill(player, ce);
         }
     }
 
@@ -104,9 +139,32 @@ public class PlayerListener implements Listener {
         Entity entity = event.getEntity();
         Player player = (Player) event.getDamager();
 
+        event.setDamage(StatisticsHandler.returnDamage(event.getDamage(), player));
+
         if (event.getEntity() instanceof ArmorStand) return;
 
         new DamageStand(entity.getWorld(), entity.getLocation(), event.getDamage(), EntityUtils.isCrit(player));
+
+        Stat stat = StatsManager.getOrCreate(player);
+
+        float xpToAdd = (float) event.getDamage() * 0.1f;
+        if (xpToAdd < 1f) xpToAdd = 1f;
+
+        xpToAdd = Math.min(xpToAdd, 50f);
+
+        stat.addExpToSlaying(xpToAdd);
+
+        MessagingHandler.sendSelfMessage(player, "&b+" + (int) xpToAdd + " Slayer EXP!");
+
+        for (ItemStack stack : player.getInventory().getContents()) {
+            EnchantUtils.updateCustomEnchants(stack);
+
+            ItemMeta meta = stack.getItemMeta();
+            meta.spigot().setUnbreakable(true);
+            stack.setItemMeta(meta);
+        }
+
+        //Dungeons.getInstance().getLogger().info("There are " + StatsManager.stats.size() + " Stats!");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -115,8 +173,12 @@ public class PlayerListener implements Listener {
 
         //Dungeons.getInstance().getLogger().info("Detected event... open");
 
-        for (ItemStack itemStack : inventory.getContents()) {
-            EnchantUtils.updateCustomEnchants(itemStack);
+        for (ItemStack stack : inventory.getContents()) {
+            EnchantUtils.updateCustomEnchants(stack);
+
+            ItemMeta meta = stack.getItemMeta();
+            meta.spigot().setUnbreakable(true);
+            stack.setItemMeta(meta);
         }
     }
 
@@ -126,8 +188,12 @@ public class PlayerListener implements Listener {
 
         //Dungeons.getInstance().getLogger().info("Detected event... open");
 
-        for (ItemStack itemStack : inventory.getContents()) {
-            EnchantUtils.updateCustomEnchants(itemStack);
+        for (ItemStack stack : inventory.getContents()) {
+            EnchantUtils.updateCustomEnchants(stack);
+
+            ItemMeta meta = stack.getItemMeta();
+            meta.spigot().setUnbreakable(true);
+            stack.setItemMeta(meta);
         }
 
         ItemStack item = event.getItem().getItemStack();

@@ -19,16 +19,23 @@ public class Stat {
     public int forging_exp;
     public int slaying_lvl;
     public int forging_lvl;
+    public int play_seconds;
     public String latest_name;
+    public boolean online;
 
     public Stat(String name){
         this(name, true);
     }
 
     public Stat(String name, boolean create){
-        this.player = Dungeons.getInstance().getServer().getPlayer(name);
-        this.uuid = player.getUniqueId();
-        this.latest_name = player.getName();
+        this.online = onlineCheck(name);
+        try {
+            this.player = Dungeons.getInstance().getServer().getPlayer(name);
+        } catch (Exception e) {
+            this.player = null;
+        }
+        this.uuid = StatsManager.getCachedUUID(name);
+        if (this.player != null) this.latest_name = name;
 
         construct(uuid, create);
     }
@@ -72,8 +79,8 @@ public class Stat {
         return false;
     }
 
-    public List<String> getInfoAsPropertyList() {
-        List<String> infoList = new ArrayList<>();
+    public TreeSet<String> getInfoAsPropertyList() {
+        TreeSet<String> infoList = new TreeSet<>();
         for (String key : info.keySet()){
             infoList.add(key + "=" + getFromKey(key));
         }
@@ -112,6 +119,8 @@ public class Stat {
     }
 
     public void getFromConfigFile() throws IOException {
+        flushInfo();
+
         if (file.exists()){
             Scanner reader = new Scanner(file);
 
@@ -195,6 +204,7 @@ public class Stat {
         defaults.add("slaying_lvl=0");
         defaults.add("forging_lvl=0");
         defaults.add("latest_name=" + latest_name);
+        defaults.add("play_seconds=0");
         //defaults.add("");
         return defaults;
     }
@@ -203,25 +213,56 @@ public class Stat {
         this.uuid = UUID.fromString(getFromKey("uuid"));
         this.slaying_exp = Integer.parseInt(getFromKey("slaying_exp"));
         this.forging_exp = Integer.parseInt(getFromKey("forging_exp"));
-        this.slaying_exp = Integer.parseInt(getFromKey("slaying_lvl"));
-        this.forging_exp = Integer.parseInt(getFromKey("forging_lvl"));
+        this.slaying_lvl = Integer.parseInt(getFromKey("slaying_lvl"));
+        this.forging_lvl = Integer.parseInt(getFromKey("forging_lvl"));
         this.latest_name = getFromKey("latest_name");
+        this.play_seconds = Integer.parseInt(getFromKey("play_seconds"));
+    }
+
+    public void addPlaySeconds(int seconds){
+        setPlaySeconds(play_seconds + seconds);
+    }
+
+    public void setPlaySeconds(int seconds) {
+        updateKey("play_seconds", seconds);
+    }
+
+    public float getPlayHours(){
+        return play_seconds / 3600f;
     }
 
     public int getLevelFromExp(int exp){
-        return (exp - 500) / 500;
+        if (exp >= 500) {
+            return ((exp - 500) / 500) + 1;
+        } else {
+            return 0;
+        }
     }
 
     public void addExpToSlaying(Float amount){
-        updateKey("slaying_exp", slaying_exp + amount.intValue());
+        int a = amount.intValue();
+        if (a < 1) a = 1;
+        setExpSlaying(slaying_exp + a);
+    }
+
+    public void setExpSlaying(int amount){
+        updateKey("slaying_exp", amount);
+        updateLevelSlaying();
     }
 
     public void updateLevelSlaying(){
-        updateKey("slaying_lvl", getLevelFromExp(slaying_lvl));
+        updateKey("slaying_lvl", getLevelFromExp(slaying_exp));
     }
 
     public void addExpToForging(Float amount){
-        updateKey("forging_exp", forging_exp + amount.intValue());
+        int a = amount.intValue();
+        if (a < 1) a = 1;
+        setExpForging(slaying_exp + a);
+    }
+
+    public void setExpForging(int amount){
+        updateKey("forging_exp", amount);
+        updateLevelForging();
     }
 
     public void updateLevelForging(){
@@ -242,5 +283,20 @@ public class Stat {
             default:
                 return 0;
         }
+    }
+
+    public boolean onlineCheck(String name){
+        return Dungeons.getInstance().getServer().getPlayer(name) != null;
+    }
+
+    public void saveInfo() throws IOException {
+        file.delete();
+
+        file.createNewFile();
+        FileWriter writer = new FileWriter(file);
+        for (String s : getInfoAsPropertyList()){
+            writer.write(s + "\n");
+        }
+        writer.close();
     }
 }

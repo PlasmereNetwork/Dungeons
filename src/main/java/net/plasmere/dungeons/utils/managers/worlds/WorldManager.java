@@ -1,9 +1,5 @@
 package net.plasmere.dungeons.utils.managers.worlds;
 
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
-import com.sk89q.worldedit.world.registry.WorldData;
 import net.plasmere.dungeons.Dungeons;
 import net.plasmere.dungeons.objects.custom.entities.BoneWalkerSkeleton;
 import net.plasmere.dungeons.objects.custom.entities.VenomousTerrantulaSpider;
@@ -15,14 +11,12 @@ import org.bukkit.WorldType;
 import org.bukkit.entity.ArmorStand;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.lang.reflect.Method;
 import java.util.*;
 
 public class WorldManager {
-    public static File floorsSchemPath = new File(Dungeons.getInstance().getDataFolder() + "saves" + File.separator);
+    public static File floorsSchemPath = new File(Dungeons.getInstance().getDataFolder() + File.separator + "saves" + File.separator);
     public static List<String> folders = new ArrayList<>(Arrays.asList("floor1", "floor2"));
-    public static TreeMap<Floors, Clipboard> floorPieces = new TreeMap<>();
+    //public static TreeMap<Floors, FaweClipboard> floorPieces = new TreeMap<>();
 
     public static boolean check(World world){
         return world.getPlayers().size() > 0;
@@ -64,11 +58,15 @@ public class WorldManager {
     public static void setUpSchemFolders(){
         for (String floor : folders) {
             try {
-                File file = new File(floorsSchemPath + floor + File.separator);
+                if (! floorsSchemPath.exists()) {
+                    floorsSchemPath.mkdir();
+                }
+
+                File file = new File(floorsSchemPath + File.separator + floor + File.separator);
 
                 if (file.exists()) continue;
 
-                file.createNewFile();
+                file.mkdir();
             } catch (Exception e) {
                 Dungeons.getInstance().getLogger().info("Error setting up a folder...");
             }
@@ -76,39 +74,39 @@ public class WorldManager {
     }
 
     public static void getFloorPieces(){
-        if (floorPieces != null) floorPieces.clear();
-
-        File[] files = floorsSchemPath.listFiles();
-
-        if (files == null) return;
-        if (files.length <= 0) return;
-
-        for (File file : files){
-            ClipboardFormat format = ClipboardFormat.findByFile(file);
-
-            if (format == null) continue;
-
-            try {
-                ClipboardReader reader = format.getReader(new FileInputStream(file));
-                Clipboard clipboard = reader.read(getWorldData());
-
-                floorPieces.put(FloorManager.getFloorByString(file.getName()), clipboard);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        if (floorPieces != null) floorPieces.clear();
+//
+//        File[] files = floorsSchemPath.listFiles();
+//
+//        if (files == null) return;
+//        if (files.length <= 0) return;
+//
+//        for (File file : files){
+//            ClipboardFormat format = ClipboardFormat.findByFile(file);
+//
+//            if (format == null) continue;
+//
+//            try {
+//                ClipboardReader reader = format.getReader(new FileInputStream(file));
+//                Clipboard clipboard = reader.read(getWorldData());
+//
+//                floorPieces.put(FloorManager.getFloorByString(file.getName()), clipboard);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
-    public static WorldData getWorldData() {
-        try {
-            Class<?> wd = Class.forName("com.sk89q.worldedit.bukkit.BukkitWorldData");
-            Method methodInstance = wd.getDeclaredMethod("getInstance");
-            methodInstance.setAccessible(true);
-            return (WorldData) methodInstance.invoke(null);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public static WorldData getWorldData() {
+//        try {
+//            Class<?> wd = Class.forName("com.sk89q.worldedit.bukkit.BukkitWorldData");
+//            Method methodInstance = wd.getDeclaredMethod("getInstance");
+//            methodInstance.setAccessible(true);
+//            return (WorldData) methodInstance.invoke(null);
+//        } catch (Throwable e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public static void summonCreatures(CustomEntities entity, int chance){
         Random RNG = new Random();
@@ -119,7 +117,7 @@ public class WorldManager {
             for (World world : worlds){
                 Collection<ArmorStand> stands = world.getEntitiesByClass(ArmorStand.class);
 
-                TreeSet<ArmorStand> st = new TreeSet<>();
+                List<ArmorStand> st = new ArrayList<>();
 
                 for (ArmorStand stand : stands){
                     if (! stand.getCustomName().startsWith("spawn.")) continue;
@@ -149,7 +147,7 @@ public class WorldManager {
             for (World world : worlds){
                 Collection<ArmorStand> stands = world.getEntitiesByClass(ArmorStand.class);
 
-                TreeSet<ArmorStand> st = new TreeSet<>();
+                List<ArmorStand> st = new ArrayList<>();
 
                 for (ArmorStand stand : stands){
                     if (! stand.getCustomName().startsWith("spawn.")) continue;

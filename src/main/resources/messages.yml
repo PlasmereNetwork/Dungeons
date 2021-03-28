@@ -5,12 +5,21 @@ version: 0.0.0.1
 join: "&d%player% &ajoined &ethe game."
 leave: "&d%player% &cleft &ethe game."
 error: "&cThere was an error..."
+no-player: "&cThe player you are looking for doesn't exist or isn't online..."
+no-perm: "&cYou do not have enough permissions to do this..."
 only-players: "&cThis command can be executed only by players!"
 needs-more: "&cNeeds more arguments!"
 needs-less: "&cNeeds less arguments!"
+
+players:
+  offline: "&d%player% &e(&cOFF&e)"
+  online: "&d%player% &e(&aON&e)"
 
 worldedit-api:
   no-selection: "&cThere is no selection!"
 
 commands:
-  set-spawning: "&eSet spawning for &b%entity% &eto &6%location%!"
+  set-spawning: "&eSet spawning for &b%entity% &eto &6%location%&e!"
+  stand-spawning: "&eSpawned all &b%entity%&es with chance &61 out of %chance%&e!"
+  get-me: "&7--- My Stats &e(&d%player%&e) &7---%newline%&ePlay Hours: &6%hours%%newline%&eSlaying XP (LVL): &6%slaying_exp% &7(&6%slaying_lvl%&7)%newline%&eForging XP (LVL): &6%forging_exp% &7(&6%forging_lvl%&7)"
+  set-stat: "&eSet stat &c%stat% &efor &d%player% &eto &6%value%&e."

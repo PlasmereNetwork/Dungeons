@@ -35,5 +35,7 @@ public class BoneWalkerSkeleton {
         entity.setHealth(CustomEntities.BONE_WALKER.health);
 
         this.weapon = weapon;
+
+        CustomEntities.addEntity(this.entity);
     }
 }

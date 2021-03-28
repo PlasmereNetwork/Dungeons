@@ -5,6 +5,8 @@ api-version: 1.8
 authors: [ Nitrate, tomstar ]
 description: Dungeon runner plugin.
 website: https://site.plasmere.net
+depend: []
+load: POSTWORLD
 
 commands:
   test:
@@ -16,3 +18,15 @@ commands:
   saveschem:
     permission: "dungeons.admin"
     aliases: "saveschematic"
+  setspawning:
+    permission: "dungeons.admin"
+    aliases: [ "spawning", "spl" ]
+  spawnatstands:
+    permission: "dungeons.admin"
+    aliases: [ "sstand", "sat" ]
+  getme:
+    permission: "dungeons.admin"
+    aliases: "stat"
+  setstats:
+    permission: "dungeons.admin"
+    aliases: [ "setst", "set" ]

@@ -36,5 +36,7 @@ public class VenomousTerrantulaSpider {
         entity.setHealth(CustomEntities.VENOMOUS_TARANTULA.health);
 
         this.weapon = weapon;
+
+        CustomEntities.addEntity(this.entity);
     }
 }

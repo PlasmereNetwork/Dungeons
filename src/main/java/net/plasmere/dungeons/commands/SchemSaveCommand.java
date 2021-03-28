@@ -1,9 +1,6 @@
 package net.plasmere.dungeons.commands;
 
-import com.sk89q.worldedit.CuboidClipboard;
-import com.sk89q.worldedit.EmptyClipboardException;
-import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.session.ClipboardHolder;
+
 import net.plasmere.dungeons.config.MessageConfUtils;
 import net.plasmere.dungeons.utils.PluginUtils;
 import net.plasmere.dungeons.utils.TextUtils;
@@ -22,44 +19,44 @@ public class SchemSaveCommand implements CommandExecutor, TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = ((Player) sender).getPlayer();
-
-            if (args == null) {
-                player.sendMessage(TextUtils.codedString(MessageConfUtils.needsMore));
-                return false;
-            }
-
-            if (args[0].equals("help")){
-                player.sendMessage(TextUtils.codedString("&bUsage: /saveschem <folder (floor)> <name>"));
-                return true;
-            }
-
-            if (args.length < 2) {
-                player.sendMessage(TextUtils.codedString(MessageConfUtils.needsMore));
-                return false;
-            }
-
-            try {
-                LocalSession session = PluginUtils.getWorldEdit().getSession(player);
-                ClipboardHolder selection = session.getClipboard();
-
-                File file = new File(WorldManager.floorsSchemPath + args[0] + "_" + args[1]);
-
-                if (file.exists()) file.delete();
-
-                CuboidClipboard clipboard = (CuboidClipboard) selection.getClipboard();
-                clipboard.saveSchematic(file);
-
-                player.sendMessage(TextUtils.codedString("&eSaved to file &b" + file.getName()));
-
-                return true;
-            } catch (EmptyClipboardException e) {
-                player.sendMessage(TextUtils.codedString(MessageConfUtils.weNoSelection));
-            } catch (Exception e) {
-                player.sendMessage(TextUtils.codedString(MessageConfUtils.error));
-            }
-        }
+//        if (sender instanceof Player) {
+//            Player player = ((Player) sender).getPlayer();
+//
+//            if (args == null) {
+//                player.sendMessage(TextUtils.codedString(MessageConfUtils.needsMore));
+//                return false;
+//            }
+//
+//            if (args[0].equals("help")){
+//                player.sendMessage(TextUtils.codedString("&bUsage: /saveschem <folder (floor)> <name>"));
+//                return true;
+//            }
+//
+//            if (args.length < 2) {
+//                player.sendMessage(TextUtils.codedString(MessageConfUtils.needsMore));
+//                return false;
+//            }
+//
+//            try {
+//                LocalSession session = PluginUtils.getWorldEdit().getSession(player);
+//                ClipboardHolder selection = session.getClipboard();
+//
+//                File file = new File(WorldManager.floorsSchemPath + args[0] + "_" + args[1]);
+//
+//                if (file.exists()) file.delete();
+//
+//                CuboidClipboard clipboard = (CuboidClipboard) selection.getClipboard();
+//                clipboard.saveSchematic(file);
+//
+//                player.sendMessage(TextUtils.codedString("&eSaved to file &b" + file.getName()));
+//
+//                return true;
+//            } catch (EmptyClipboardException e) {
+//                player.sendMessage(TextUtils.codedString(MessageConfUtils.weNoSelection));
+//            } catch (Exception e) {
+//                player.sendMessage(TextUtils.codedString(MessageConfUtils.error));
+//            }
+//        }
 
         return false;
     }

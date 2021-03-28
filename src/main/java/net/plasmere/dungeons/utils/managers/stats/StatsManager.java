@@ -7,6 +7,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.plasmere.dungeons.Dungeons;
+import net.plasmere.dungeons.config.MessageConfUtils;
+import net.plasmere.dungeons.utils.TextUtils;
 import net.plasmere.dungeons.utils.managers.CustomEntities;
 import org.bukkit.entity.Player;
 
@@ -16,14 +18,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.TreeSet;
-import java.util.UUID;
+import java.util.*;
 
 public class StatsManager {
     public static String folder = Dungeons.getInstance().getDataFolder() + File.separator + "players" + File.separator;
-    public static TreeSet<Stat> stats = new TreeSet<>();
+    public static List<Stat> stats = new ArrayList<>();
 
     public static Cache<String, UUID> cachedUUIDs = Caffeine.newBuilder().build();
     public static Cache<UUID, String> cachedNames = Caffeine.newBuilder().build();
@@ -31,13 +30,47 @@ public class StatsManager {
     public static void setup(){
         File file = new File(folder);
         if (file.exists()) return;
-        if (! file.isDirectory()) return;
 
         try {
-            file.createNewFile();
+            file.mkdir();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static Stat createAndAdd(String name){
+        Stat stat = new Stat(name);
+        stats.add(stat);
+
+        Dungeons.getInstance().getLogger().info("Added a player for " + name);
+
+        return stat;
+    }
+
+    public static Stat getOrCreate(Player player){
+        Stat s = getSt(player);
+
+        if (s == null) {
+            return createAndAdd(player.getName());
+        }
+
+        return s;
+    }
+
+    public static Stat getOrCreate(String name){
+        Stat s = getSt(name);
+
+        if (s == null) {
+            return createAndAdd(name);
+        }
+
+        return s;
+    }
+
+    public static void removeStat(String name){
+        Stat stat = getOrCreate(name);
+
+        stats.remove(stat);
     }
 
     public static boolean hasStat(String latestName){
@@ -185,7 +218,7 @@ public class StatsManager {
                 if (hasStat(name)) {
                     return getStat(name);
                 } else {
-                    return new Stat(name);
+                    return createAndAdd(name);
                 }
             } else {
                 return null;
@@ -204,7 +237,7 @@ public class StatsManager {
                 if (hasStat(name)) {
                     return getStat(name);
                 } else {
-                    return new Stat(name);
+                    return createAndAdd(name);
                 }
             } else {
                 return null;
@@ -221,7 +254,7 @@ public class StatsManager {
                 if (hasStat(name)) {
                     return getStat(name);
                 } else {
-                    return new Stat(name);
+                    return createAndAdd(name);
                 }
             }
 
@@ -240,9 +273,19 @@ public class StatsManager {
         }
     }
 
-    public static void onKill(Player killer, CustomEntities entity){
-        Stat stat = getStat(killer);
+    public static String getOfflineOrOnlineDisplay(String name){
+        Stat stat = getOrCreate(name);
 
-        stat.addExpToSlaying((stat.getStatBonus(Stat.Bonuses.SLAYING) + 0 + 1) * entity.multiplier);
+        return getOfflineOrOnlineDisplay(stat);
+    }
+
+    public static String getOfflineOrOnlineDisplay(Stat stat){
+        return (stat.online ?
+                TextUtils.codedString(MessageConfUtils.online
+                        .replace("%player%", stat.latest_name)
+                ) :
+                TextUtils.codedString(MessageConfUtils.offline
+                        .replace("%player%", stat.latest_name)
+                ));
     }
 }

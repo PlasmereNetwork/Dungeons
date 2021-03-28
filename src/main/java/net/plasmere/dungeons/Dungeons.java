@@ -1,12 +1,14 @@
 package net.plasmere.dungeons;
 
 import net.plasmere.dungeons.config.ConfigHandler;
+import net.plasmere.dungeons.config.ConfigUtils;
 import net.plasmere.dungeons.objects.custom.runnables.SummonRun;
 import net.plasmere.dungeons.utils.TextUtils;
 import net.plasmere.dungeons.utils.managers.CustomEnchants;
 import net.plasmere.dungeons.objects.custom.runnables.SecondsTimerRun;
 import net.plasmere.dungeons.utils.PluginUtils;
 import net.plasmere.dungeons.utils.managers.CustomEntities;
+import net.plasmere.dungeons.utils.managers.stats.StatsManager;
 import net.plasmere.dungeons.utils.managers.worlds.WorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -30,10 +32,10 @@ public final class Dungeons extends JavaPlugin {
     public void onEnable() {
         pm = this.getServer().getPluginManager();
 
-        if (getServer().getPluginManager().getPlugin("WorldEdit") == null) {
-            console.sendMessage(TextUtils.codedString("&cWorldEdit not loaded!"));
-            getServer().getPluginManager().disablePlugin(this);
-        }
+//        if (getServer().getPluginManager().getPlugin("WorldEdit") == null) {
+//            console.sendMessage(TextUtils.codedString("&cWorldEdit not loaded!"));
+//            getServer().getPluginManager().disablePlugin(this);
+//        }
 
         // Plugin startup logic
 

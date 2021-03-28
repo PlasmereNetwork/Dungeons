@@ -64,14 +64,8 @@
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>sk89q</id>
-            <url>http://maven.sk89q.com/repo/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <id>FAWE</id>
+            <url>https://ci.athion.net/job/FastAsyncWorldEdit/lastSuccessfulBuild</url>
         </repository>
     </repositories>
 
@@ -88,11 +82,13 @@
             <version>1.18.16</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.sk89q.worldedit</groupId>
-            <artifactId>worldedit-bukkit</artifactId>
-            <version>6.1.3-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>FastAsyncWorldEdit</groupId>-->
+<!--            <artifactId>FAWE-bukkit</artifactId>-->
+<!--            <version>b67f782-1287-22.3.10</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/FastAsyncWorldEdit-bukkit-21.03.26-b67f782-1287-22.3.10.jar</systemPath>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
