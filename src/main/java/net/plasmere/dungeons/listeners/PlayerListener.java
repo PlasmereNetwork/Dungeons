@@ -1,7 +1,5 @@
 package net.plasmere.dungeons.listeners;
 
-import net.plasmere.dungeons.Dungeons;
-import net.plasmere.dungeons.config.ConfigUtils;
 import net.plasmere.dungeons.config.MessageConfUtils;
 import net.plasmere.dungeons.utils.MessagingHandler;
 import net.plasmere.dungeons.utils.managers.CustomEnchants;
@@ -48,7 +46,11 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
 
         for (ItemStack stack : player.getInventory().getContents()){
+            if (stack == null) continue;
+
             EnchantUtils.updateCustomEnchants(stack);
+
+            if (stack.getItemMeta() == null) continue;
 
             ItemMeta meta = stack.getItemMeta();
             meta.spigot().setUnbreakable(true);
@@ -65,7 +67,11 @@ public class PlayerListener implements Listener {
         event.setQuitMessage(TextUtils.codedString(MessageConfUtils.leave.replace("%player%", event.getPlayer().getDisplayName())));
 
         for (ItemStack stack : event.getPlayer().getInventory().getContents()) {
+            if (stack == null) continue;
+
             EnchantUtils.updateCustomEnchants(stack);
+
+            if (stack.getItemMeta() == null) continue;
 
             ItemMeta meta = stack.getItemMeta();
             meta.spigot().setUnbreakable(true);
@@ -157,7 +163,11 @@ public class PlayerListener implements Listener {
         MessagingHandler.sendSelfMessage(player, "&b+" + (int) xpToAdd + " Slayer EXP!");
 
         for (ItemStack stack : player.getInventory().getContents()) {
+            if (stack == null) continue;
+
             EnchantUtils.updateCustomEnchants(stack);
+
+            if (stack.getItemMeta() == null) continue;
 
             ItemMeta meta = stack.getItemMeta();
             meta.spigot().setUnbreakable(true);
@@ -174,7 +184,11 @@ public class PlayerListener implements Listener {
         //Dungeons.getInstance().getLogger().info("Detected event... open");
 
         for (ItemStack stack : inventory.getContents()) {
+            if (stack == null) continue;
+
             EnchantUtils.updateCustomEnchants(stack);
+
+            if (stack.getItemMeta() == null) continue;
 
             ItemMeta meta = stack.getItemMeta();
             meta.spigot().setUnbreakable(true);
@@ -189,7 +203,11 @@ public class PlayerListener implements Listener {
         //Dungeons.getInstance().getLogger().info("Detected event... open");
 
         for (ItemStack stack : inventory.getContents()) {
+            if (stack == null) continue;
+
             EnchantUtils.updateCustomEnchants(stack);
+
+            if (stack.getItemMeta() == null) continue;
 
             ItemMeta meta = stack.getItemMeta();
             meta.spigot().setUnbreakable(true);

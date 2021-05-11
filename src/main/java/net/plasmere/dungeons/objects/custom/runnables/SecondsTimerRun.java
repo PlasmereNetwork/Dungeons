@@ -45,7 +45,11 @@ public class SecondsTimerRun extends BukkitRunnable {
             EnchantUtils.forUpdateEnch(player);
 
             for (ItemStack stack : player.getInventory().getContents()) {
+                if (stack == null) continue;
+
                 EnchantUtils.updateCustomEnchants(stack);
+
+                if (stack.getItemMeta() == null) continue;
 
                 ItemMeta meta = stack.getItemMeta();
                 meta.spigot().setUnbreakable(true);
@@ -57,8 +61,12 @@ public class SecondsTimerRun extends BukkitRunnable {
             }
         }
 
-        WorldManager.checkAndDelete();
+        try {
+            WorldManager.checkAndDelete();
 
-        CustomEntities.updateAndRemove();
+            CustomEntities.updateAndRemove();
+        } catch (Exception e) {
+            // do nothing.
+        }
     }
 }

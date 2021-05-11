@@ -231,12 +231,24 @@ public class Stat {
         return play_seconds / 3600f;
     }
 
-    public int getLevelFromExp(int exp){
-        if (exp >= 500) {
-            return ((exp - 500) / 500) + 1;
-        } else {
-            return 0;
+    public int getLevelFromExp(Bonuses bonus, int exp){
+        if (bonus.equals(Bonuses.SLAYING)) {
+            if (exp >= 500) {
+                return ((exp - 500) / 500) / (slaying_lvl * 2) +1;
+            } else {
+                return 0;
+            }
         }
+
+        if (bonus.equals(Bonuses.FORGING)) {
+            if (exp >= 500) {
+                return ((exp - 500) / 500) / (forging_lvl * 2) +1;
+            } else {
+                return 0;
+            }
+        }
+
+        return 0;
     }
 
     public void addExpToSlaying(Float amount){
@@ -251,7 +263,7 @@ public class Stat {
     }
 
     public void updateLevelSlaying(){
-        updateKey("slaying_lvl", getLevelFromExp(slaying_exp));
+        updateKey("slaying_lvl", getLevelFromExp(Bonuses.SLAYING, slaying_exp));
     }
 
     public void addExpToForging(Float amount){
@@ -266,7 +278,7 @@ public class Stat {
     }
 
     public void updateLevelForging(){
-        updateKey("forging_lvl", getLevelFromExp(forging_exp));
+        updateKey("forging_lvl", getLevelFromExp(Bonuses.FORGING, forging_exp));
     }
 
     public enum Bonuses {
